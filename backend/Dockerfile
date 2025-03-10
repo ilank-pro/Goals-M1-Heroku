@@ -14,8 +14,11 @@ ENV FLASK_APP=app
 ENV FLASK_ENV=production
 ENV PYTHONPATH=/app
 
+# Use Heroku's PORT environment variable
+ENV PORT=5001
+
 # Expose port
-EXPOSE 5001
+EXPOSE $PORT
 
 # Run the application
-CMD ["python", "run.py"] 
+CMD python run.py 

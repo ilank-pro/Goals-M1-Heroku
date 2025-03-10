@@ -1,0 +1,7 @@
+build:
+  docker:
+    web: backend/Dockerfile
+    frontend: frontend/Dockerfile
+run:
+  web: python run.py
+  frontend: nginx -g 'daemon off;' 
