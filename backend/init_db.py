@@ -1,15 +1,22 @@
 from app import create_app
 from app.extensions import db
 from app.models.person import Person
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def init_db():
     app = create_app()
     with app.app_context():
         # Create all tables
+        logger.info("Creating database tables...")
         db.create_all()
         
         # Add sample data if no persons exist
         if Person.query.count() == 0:
+            logger.info("Adding sample data...")
             # Create root person
             root = Person(name="CEO", position="Chief Executive Officer")
             db.session.add(root)
@@ -28,9 +35,9 @@ def init_db():
             
             # Commit the changes
             db.session.commit()
-            print("Sample data added successfully!")
+            logger.info("Sample data added successfully!")
         else:
-            print("Database already contains data.")
+            logger.info("Database already contains data.")
 
 if __name__ == '__main__':
     init_db() 
