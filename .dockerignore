@@ -1,0 +1,28 @@
+# Git
+.git
+.gitignore
+
+# Node.js
+frontend/node_modules
+frontend/npm-debug.log
+frontend/dist
+
+# Python
+backend/__pycache__
+backend/*.pyc
+backend/*.pyo
+backend/*.pyd
+backend/.Python
+backend/env
+backend/venv
+backend/*.db
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db 
