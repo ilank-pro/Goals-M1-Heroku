@@ -3,7 +3,7 @@ import axios from 'axios';
 // Create axios instance with base URL
 const api = axios.create({
   baseURL: process.env.NODE_ENV === 'production' 
-    ? 'https://goals-app-m1-docker-50c3405da20b.herokuapp.com/api'
+    ? 'https://goals-app-m1-docker-backend-da63a4170bf6.herokuapp.com/api'
     : '/api',  // Use relative path for development
   headers: {
     'Content-Type': 'application/json'
