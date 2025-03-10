@@ -5,11 +5,6 @@ from app.routes.persons import persons_bp
 from app.routes.goals import goals_bp
 from app.routes.documents import documents_bp
 import os
-import logging
-
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 def create_app():
     # Create and configure the app
@@ -19,24 +14,11 @@ def create_app():
     # Ensure the instance folder exists
     try:
         os.makedirs(app.instance_path)
-        logger.info(f"Created instance folder at {app.instance_path}")
     except OSError:
-        logger.info(f"Instance folder already exists at {app.instance_path}")
+        pass
     
-    # Configure database
-    database_url = os.environ.get('DATABASE_URL')
-    if database_url:
-        # Heroku provides DATABASE_URL with 'postgres://' but SQLAlchemy needs 'postgresql://'
-        if database_url.startswith('postgres://'):
-            database_url = database_url.replace('postgres://', 'postgresql://', 1)
-        app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-        logger.info("Using PostgreSQL database from DATABASE_URL")
-    else:
-        # Fallback to SQLite for local development
-        db_path = os.path.join(app.instance_path, "app.db")
-        app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
-        logger.info(f"Using SQLite database at {db_path}")
-    
+    # Configure SQLite database
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(app.instance_path, "app.db")}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     # Initialize extensions
@@ -46,7 +28,6 @@ def create_app():
     app.register_blueprint(persons_bp, url_prefix='/api/persons')
     app.register_blueprint(goals_bp, url_prefix='/api/goals')
     app.register_blueprint(documents_bp, url_prefix='/api/documents')
-    logger.info("Registered all blueprints")
     
     # Serve static files
     @app.route('/', defaults={'path': ''})
