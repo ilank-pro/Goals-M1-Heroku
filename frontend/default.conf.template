@@ -2,6 +2,9 @@ server {
     listen $PORT;
     server_name localhost;
 
+    # Enable error logging
+    error_log /var/log/nginx/error.log debug;
+
     location / {
         root /usr/share/nginx/html;
         index index.html;
@@ -15,5 +18,9 @@ server {
         proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
+        
+        # Add error logging for proxy
+        proxy_intercept_errors on;
+        error_log /var/log/nginx/proxy_error.log debug;
     }
 } 
