@@ -21,4 +21,4 @@ ENV PORT=5001
 EXPOSE $PORT
 
 # Run the application
-CMD python run.py 
+CMD python init_db.py && python run.py 
