@@ -23,11 +23,21 @@ def create_app():
     except OSError:
         logger.info(f"Instance folder already exists at {app.instance_path}")
     
-    # Configure SQLite database
-    db_path = os.path.join(app.instance_path, "app.db")
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+    # Configure database
+    database_url = os.environ.get('DATABASE_URL')
+    if database_url:
+        # Heroku provides DATABASE_URL with 'postgres://' but SQLAlchemy needs 'postgresql://'
+        if database_url.startswith('postgres://'):
+            database_url = database_url.replace('postgres://', 'postgresql://', 1)
+        app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+        logger.info("Using PostgreSQL database from DATABASE_URL")
+    else:
+        # Fallback to SQLite for local development
+        db_path = os.path.join(app.instance_path, "app.db")
+        app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+        logger.info(f"Using SQLite database at {db_path}")
+    
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    logger.info(f"Database path: {db_path}")
     
     # Initialize extensions
     db.init_app(app)
