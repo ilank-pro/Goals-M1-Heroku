@@ -5,10 +5,16 @@ server {
     # Enable debug logging
     error_log /var/log/nginx/error.log debug;
 
+    root /usr/share/nginx/html;
+    index index.html;
+
     location / {
-        root /usr/share/nginx/html;
-        index index.html;
         try_files $uri $uri/ /index.html;
+    }
+
+    location /static {
+        expires 1y;
+        add_header Cache-Control "public";
     }
 
     location /api/ {
@@ -57,5 +63,10 @@ server {
         add_header X-Debug-Status $status always;
         add_header X-Debug-URI $request_uri always;
         return 502 '{"error": "Proxy error", "status": $status, "uri": "$request_uri"}';
+    }
+
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+        root /usr/share/nginx/html;
     }
 } 
