@@ -1,6 +1,98 @@
-# Organizational Structure App
+# Goals Application
 
-A web application for managing organizational structures, personnel, and goals. This application allows users to create and visualize hierarchical organizational structures, manage personnel details, and track goals that propagate through the organization.
+A full-stack application for managing organizational goals and hierarchies.
+
+## Architecture
+
+The application consists of two main components:
+- Frontend: React application served by Nginx
+- Backend: Python Flask API with PostgreSQL database
+
+## Deployment
+
+The application is deployed on Heroku using Docker containers.
+
+### Prerequisites
+
+1. Heroku CLI installed
+2. Docker installed
+3. Git installed
+
+### Deployment Steps
+
+1. Clone the repository:
+```bash
+git clone https://github.com/ilank-pro/Goals-M1-Heroku.git
+cd Goals-M1-Heroku
+```
+
+2. Create Heroku apps for frontend and backend:
+```bash
+heroku create goals-app-m1-docker
+heroku create goals-app-m1-docker-backend
+```
+
+3. Set up the backend:
+```bash
+# Set stack to container
+heroku stack:set container --app goals-app-m1-docker-backend
+
+# Add PostgreSQL
+heroku addons:create heroku-postgresql:mini --app goals-app-m1-docker-backend
+
+# Deploy backend
+cd backend
+heroku container:push web --app goals-app-m1-docker-backend
+heroku container:release web --app goals-app-m1-docker-backend
+```
+
+4. Set up the frontend:
+```bash
+# Set stack to container
+heroku stack:set container --app goals-app-m1-docker
+
+# Set backend URL
+heroku config:set BACKEND_URL=https://[your-backend-app-name].herokuapp.com --app goals-app-m1-docker
+
+# Deploy frontend
+cd frontend
+heroku container:push web --app goals-app-m1-docker
+heroku container:release web --app goals-app-m1-docker
+```
+
+## Environment Variables
+
+### Backend
+- `DATABASE_URL`: Set automatically by Heroku PostgreSQL addon
+- `PORT`: Set automatically by Heroku
+
+### Frontend
+- `PORT`: Set automatically by Heroku
+- `BACKEND_URL`: URL of the backend API
+
+## Development
+
+1. Install dependencies:
+```bash
+# Backend
+cd backend
+pip install -r requirements.txt
+
+# Frontend
+cd frontend
+npm install
+```
+
+2. Run locally:
+```bash
+# Backend
+cd backend
+python app.py
+
+# Frontend
+cd frontend
+npm start
+```
 
 ## Features
 
